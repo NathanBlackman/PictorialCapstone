@@ -9,33 +9,36 @@ namespace PictorialAPI.Controllers
     [ApiController]
     public class UserPiecesController : Controller
     {
-        private readonly IUserPiecesRepository _upRepo;
+
         private readonly UserPiecesRepository _userPieceRepo;
+        // add pieceRepo
+        /*private readonly PiecesRepository _pieceRepo;*/
+
 
         // GET api/<UserPiecesController>
-        public UserPiecesController(IUserPiecesRepository userPieceRepository)
+        public UserPiecesController(UserPiecesRepository userPieceRepository)
         {
-            _upRepo = userPieceRepository;
+            _userPieceRepo = userPieceRepository;
         }
 
         [HttpGet]
-        public List<UserPieces> GetAllUserPieces()
+        public List<UserPieces> GetAllUserPieces(int id)
         {
-            return _upRepo.GetAllUserPieces();
+            return _userPieceRepo.GetAllUserPieces(id);
         }
 
         // GET api/<UserPiecesController>/{id}
         [HttpGet("{id}")]
-        public Pieces Get(int id)
+        public UserPieces GetSinglePiece(int id)
         {
-            return _upRepo.GetUserPieceById(id);
+            return _userPieceRepo.GetSinglePiece(id);
         }
 
         // POST api/<UserPiecesController>
         [HttpPost]
         public IActionResult Post(UserPieces newUserPiece)
         {
-            _piecesRepo.AddPiece(newUserPiece);
+            _userPieceRepo.AddUserPiece(newUserPiece);
             return Ok(newUserPiece);
         }
         
@@ -44,18 +47,18 @@ namespace PictorialAPI.Controllers
         [HttpPatch("{id}")]
         public IActionResult Put(int id, UserPieces userPieces)
         {
-            if (id != UserPieces.Id)
+            if (id != userPieces.Id)
             {
                 return BadRequest();
             }
-            var existingUserPiece = _upRepo.GetUserPiecesById(id);
+            var existingUserPiece = _userPieceRepo.GetSinglePiece(id);
             if (existingUserPiece == null)
             {
                 return NotFound();
             }
             else
             {
-                _upRepo.UpdateUserPiece(userPieces);
+                _userPieceRepo.UpdateUserPiece(userPieces);
                 return NoContent();
             }
         }
@@ -64,21 +67,16 @@ namespace PictorialAPI.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var matchingUserPiece = _upRepo.GetUserPieceById(id);
+            var matchingUserPiece = _userPieceRepo.GetSinglePiece(id);
             if(matchingUserPiece == null)
             {
                 return NotFound();
             }
             else
             {
-                _upRepo.DeleteUserPiece(matchingUserPiece.Id);
+                _userPieceRepo.DeleteUserPiece(matchingUserPiece.Id);
                 return NoContent();
             }
-        }
-
-        public Pieces GetUserPieceById(int id)
-        {
-            return _upRepo.GetUserPieceById(id);
         }
     }
 }

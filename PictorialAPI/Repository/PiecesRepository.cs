@@ -3,10 +3,10 @@ using Microsoft.Data.SqlClient;
 
 namespace PictorialAPI.Repositories
 {
-    public class UserPiecesRepository : IUserPiecesRepository
+    public class PiecesRepository : IPiecesRepository
     {
         private readonly IConfiguration _config;
-        public UserPiecesRepository(IConfiguration config)
+        public PiecesRepository(IConfiguration config)
         {
             _config = config;
         }
@@ -18,7 +18,7 @@ namespace PictorialAPI.Repositories
             }
         }
 
-        public List<UserPieces> GetAllUserPieces(int userId)
+        public List<Pieces> GetAllPieces()
         {
             using (SqlConnection conn = Connection)
             {
@@ -27,37 +27,40 @@ namespace PictorialAPI.Repositories
                 {
                     cmd.CommandText = @"
                         SELECT Id,
-                               ArtistUserId,
-                               PieceId
-                        FROM UserPieces
+                               [Name],
+                               [Image],
+                               [Date],
+                               ArtistUserId
+                        FROM Piece
                     ";
                     SqlDataReader reader = cmd.ExecuteReader();
 
-                    List<UserPieces> userPieces = new List<UserPieces>();
+                    List<Pieces> pieces = new List<Pieces>();
                     while (reader.Read())
                     {
-                        UserPieces userPiece = new UserPieces
+                        Pieces piece = new Pieces
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            ArtistUserId = reader.GetInt32(reader.GetOrdinal("ArtistUserId")),
-                            PieceId = reader.GetInt32(reader.GetOrdinal("PieceId")),
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                            Image = reader.GetString(reader.GetOrdinal("Image")),
+                            Date = reader.GetString(reader.GetOrdinal("Date"))
 
                         };
                         if (reader.IsDBNull(reader.GetOrdinal("ArtistUserId")) == false)
                         {
-                            userPiece.ArtistUserId = reader.GetInt32(reader.GetOrdinal("ArtistUserId"));
+                            piece.ArtistUserId = reader.GetInt32(reader.GetOrdinal("ArtistUserId"));
                         }
 
-                        userPieces.Add(userPiece);
+                        pieces.Add(piece);
                     }
                     reader.Close();
 
-                    return userPieces;
+                    return pieces;
                 }
             }
         }
 
-        public UserPieces GetSinglePiece(int id)
+        public Pieces GetPieceById(int id)
         {
             using (SqlConnection conn = Connection)
             {
@@ -66,9 +69,11 @@ namespace PictorialAPI.Repositories
                 {
                     cmd.CommandText = @"
                         SELECT Id,
-                               ArtistUserId,
-                               PieceId
-                        FROM UserPieces
+                               [Name],
+                               [Image],
+                               [Date],
+                               ArtistUserId
+                        FROM Piece
                         WHERE Id = @id
                     ";
 
@@ -78,19 +83,20 @@ namespace PictorialAPI.Repositories
 
                     if (reader.Read())
                     {
-                        UserPieces userPiece = new UserPieces
+                        Pieces pieces = new Pieces
                         {
                             Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                            ArtistUserId = reader.GetInt32(reader.GetOrdinal("ArtistUserId")),
-                            PieceId = reader.GetInt32(reader.GetOrdinal("PieceId")),
+                            Name = reader.GetString(reader.GetOrdinal("Name")),
+                            Image = reader.GetString(reader.GetOrdinal("Image")),
+                            Date = reader.GetString(reader.GetOrdinal("Date")),
                         };
                         if (reader.IsDBNull(reader.GetOrdinal("ArtistUserId")) == false)
                         {
-                            userPiece.ArtistUserId = reader.GetInt32(reader.GetOrdinal("ArtistUserId"));
+                            pieces.ArtistUserId = reader.GetInt32(reader.GetOrdinal("ArtistUserId"));
                         }
 
                         reader.Close();
-                        return userPiece;
+                        return pieces;
                     }
                     else
                     {
@@ -100,7 +106,7 @@ namespace PictorialAPI.Repositories
                 }
             }
         }
-        public void AddUserPiece(UserPieces userPieces)
+        public void AddPiece(Pieces pieces)
         {
             using (SqlConnection conn = Connection)
             {
@@ -108,33 +114,34 @@ namespace PictorialAPI.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                    INSERT INTO UserPieces (ArtistUserId,
-                                            PieceId,
-                                            )
+                    INSERT INTO Piece ([Name], 
+                                       [Image],
+                                       [Date],
+                                       ArtistUserId,
+                                       )
                     OUTPUT INSERTED.ID
                     VALUES (@name, @image, @date, @artistUserId)
                 ";
-                    /*cmd.Parameters.AddWithValue("@name", pieces.Name);
+                    cmd.Parameters.AddWithValue("@name", pieces.Name);
                     cmd.Parameters.AddWithValue("@image", pieces.Image);
-                    cmd.Parameters.AddWithValue("@date", pieces.Date);*/
+                    cmd.Parameters.AddWithValue("@date", pieces.Date);
 
-                    // int == false ///////////////////////////
-                    if (userPieces.ArtistUserId == 0) 
+                    if (pieces.ArtistUserId == 0)
                     {
                         cmd.Parameters.AddWithValue("@artistUserId", DBNull.Value);
                     }
                     else
                     {
-                        cmd.Parameters.AddWithValue("@artistUserId", userPieces.ArtistUserId);
+                        cmd.Parameters.AddWithValue("@artistUserId", pieces.ArtistUserId);
                     }
 
                     int newlyCreatedId = (int)cmd.ExecuteScalar();
 
-                    userPieces.Id = newlyCreatedId;
+                    pieces.Id = newlyCreatedId;
                 }
             }
         }
-        public void UpdateUserPiece(UserPieces userPieces)
+        public void UpdatePiece(Pieces pieces)
         {
             using (SqlConnection conn = Connection)
             {
@@ -142,32 +149,34 @@ namespace PictorialAPI.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                    UPDATE UserPieces
+                    UPDATE Piece
                     SET
+                        [Name] = @name,
+                        [Image] = @image,
+                        [Date] = @date,
                         ArtistUserId = @artistUserId
-                        PieceId = @pieceId
                     WHERE Id = @id
                 ";
 
-                    /*cmd.Parameters.AddWithValue("@name", pieces.Name);
+                    cmd.Parameters.AddWithValue("@name", pieces.Name);
                     cmd.Parameters.AddWithValue("@image", pieces.Image);
                     cmd.Parameters.AddWithValue("@date", pieces.Date);
-                    cmd.Parameters.AddWithValue("@id", pieces.Id);*/
+                    cmd.Parameters.AddWithValue("@id", pieces.Id);
 
-                    if (userPieces.ArtistUserId == null) // int == false is wrong
+                    if (pieces.ArtistUserId == 0)
                     {
                         cmd.Parameters.AddWithValue("@artistUserId", DBNull.Value);
                     }
                     else
                     {
-                        cmd.Parameters.AddWithValue("@artistUserId", userPieces.ArtistUserId);
+                        cmd.Parameters.AddWithValue("@artistUserId", pieces.ArtistUserId);
                     }
 
                     cmd.ExecuteNonQuery();
                 }
             }
         }
-        public void DeleteUserPiece(int id)
+        public void DeletePiece(int id)
         {
             using (SqlConnection conn = Connection)
             {
@@ -175,7 +184,7 @@ namespace PictorialAPI.Repositories
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                    DELETE FROM Pieces
+                    DELETE FROM Piece
                     WHERE Id = @id
                 ";
                     cmd.Parameters.AddWithValue("id", id);

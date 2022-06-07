@@ -7,12 +7,12 @@ namespace PictorialAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PiecesController : Controller
+    public class PiecesControllerTest : Controller
     {
         private readonly PiecesRepository _piecesRepo;
 
         // GET api/<PiecesController>
-        public PiecesController(PiecesRepository pieceRepository)
+        public PiecesControllerTest(PiecesRepository pieceRepository)
         {
             _piecesRepo = pieceRepository;
         }

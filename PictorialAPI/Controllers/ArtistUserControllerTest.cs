@@ -7,10 +7,10 @@ namespace PictorialAPI.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ArtistUserController : ControllerBase
+    public class ArtistUserControllerTest : ControllerBase
     {
         private readonly IArtistUserRepository _artistUserRepo;
-        public ArtistUserController(IArtistUserRepository artistUserRepository)
+        public ArtistUserControllerTest(IArtistUserRepository artistUserRepository)
         {
             _artistUserRepo = artistUserRepository;
         }

@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 
 namespace PictorialAPI.Repositories
 {
-    public class PiecesRepository : IPieceRepository
+    public class PiecesRepository : IPiecesRepository
     {
         private readonly IConfiguration _config;
         public PiecesRepository(IConfiguration config)
@@ -48,7 +48,7 @@ namespace PictorialAPI.Repositories
                         };
                         if (reader.IsDBNull(reader.GetOrdinal("ArtistUserId")) == false)
                         {
-                            piece.ArtistUserId = reader.GetString(reader.GetOrdinal("ArtistUserId"));
+                            piece.ArtistUserId = reader.GetInt32(reader.GetOrdinal("ArtistUserId"));
                         }
 
                         pieces.Add(piece);
@@ -60,7 +60,7 @@ namespace PictorialAPI.Repositories
             }
         }
 
-        public Pieces GetPiecesById(int id)
+        public Pieces GetPieceById(int id)
         {
             using (SqlConnection conn = Connection)
             {
@@ -92,7 +92,7 @@ namespace PictorialAPI.Repositories
                         };
                         if (reader.IsDBNull(reader.GetOrdinal("ArtistUserId")) == false)
                         {
-                            pieces.ArtistUserId = reader.GetString(reader.GetOrdinal("ArtistUserId"));
+                            pieces.ArtistUserId = reader.GetInt32(reader.GetOrdinal("ArtistUserId"));
                         }
 
                         reader.Close();
@@ -126,7 +126,7 @@ namespace PictorialAPI.Repositories
                     cmd.Parameters.AddWithValue("@image", pieces.Image);
                     cmd.Parameters.AddWithValue("@date", pieces.Date);
 
-                    if (pieces.ArtistUserId == null)
+                    if (pieces.ArtistUserId == 0)
                     {
                         cmd.Parameters.AddWithValue("@artistUserId", DBNull.Value);
                     }
@@ -163,13 +163,13 @@ namespace PictorialAPI.Repositories
                     cmd.Parameters.AddWithValue("@date", pieces.Date);
                     cmd.Parameters.AddWithValue("@id", pieces.Id);
 
-                    if (pieces.ArtistUserId == null)
+                    if (pieces.ArtistUserId == 0)
                     {
                         cmd.Parameters.AddWithValue("@artistUserId", DBNull.Value);
                     }
                     else
                     {
-                        cmd.Parameters.AddWithValue("@buyerId", pieces.ArtistUserId);
+                        cmd.Parameters.AddWithValue("@artistUserId", pieces.ArtistUserId);
                     }
 
                     cmd.ExecuteNonQuery();
