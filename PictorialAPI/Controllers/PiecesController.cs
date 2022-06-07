@@ -11,8 +11,8 @@ namespace PictorialAPI.Controllers
     [ApiController]
     public class PiecesController : ControllerBase
     {
-        private readonly PiecesRepository _piecesRepo;
-        public PiecesController(PiecesRepository pieceRepository)
+        private readonly IPiecesRepository _piecesRepo;
+        public PiecesController(IPiecesRepository pieceRepository)
         {
             _piecesRepo = pieceRepository;
         }
