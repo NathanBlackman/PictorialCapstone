@@ -9,7 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IArtistUserRepository, ArtistUserRepository>();
 builder.Services.AddTransient<IPiecesRepository, PiecesRepository>();
-/*builder.Services.AddTransient<IUserPiecesRepository, UserPiecesRepository>();*/
+builder.Services.AddTransient<IUserPiecesRepository, UserPiecesRepository>();
 
 var app = builder.Build();
 
