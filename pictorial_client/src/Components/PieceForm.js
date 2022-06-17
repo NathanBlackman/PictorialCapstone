@@ -14,7 +14,7 @@ const initialState = {
     name: "",
     image: "",
     date: "",
-    artistUserId: ""
+    artistUserId: "",
 }
 
 export default function PieceForm(obj = {}) {
@@ -31,13 +31,27 @@ export default function PieceForm(obj = {}) {
         }
     }, [obj]);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
 
-        setFormInput((prevState) => ({
-            ...prevState,
-            [name]: value,
-        }));
+    //     setFormInput((prevState) => ({
+    //         ...prevState,
+    //         [name]: value
+    //     }));
+    // };
+
+    const handleChangeName = (e) => {
+        setFormInput({
+            ...formInput,
+            name: e.target.value
+        });
+    };
+
+    const handleChangeImage = (e) => {
+        setFormInput({
+            ...formInput,
+            image: e.target.value
+        });
     };
 
     const resetForm = () => {
@@ -62,9 +76,9 @@ export default function PieceForm(obj = {}) {
     
     return (
         <div>
-            <Form onSubmit={handleSubmit} className="artist-form">
+            <Form onSubmit={handleSubmit} className="piece-form">
                 <FormGroup>
-                    <Label for="piece-name">
+                    <Label htmlFor="piece-name">
                         Piece Name
                     </Label>
                     <input
@@ -73,12 +87,12 @@ export default function PieceForm(obj = {}) {
                         type="text"
                         placeholder="Enter Piece Name"
                         value={formInput.name || ""}
-                        onChange={handleChange}
+                        onChange={handleChangeName}
                         required
                     />
                 </FormGroup>
                 <FormGroup>
-                    <Label for="piece-image">
+                    <Label htmlFor="piece-image">
                         Piece Image
                     </Label>
                     <input
@@ -87,9 +101,14 @@ export default function PieceForm(obj = {}) {
                         type="text"
                         placeholder="Image Url"
                         value={formInput.image || ""}
-                        onChange={handleChange}
+                        onChange={handleChangeImage}
                         required
                     />
+                </FormGroup>
+                <FormGroup htmlFor="test-field">
+                    <Label>
+                        Test Field
+                    </Label>
                     <input 
                         id="test-field"
                         name="test-field"

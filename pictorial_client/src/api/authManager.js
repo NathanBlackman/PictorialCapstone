@@ -21,6 +21,18 @@ export const getToken = () => {
     return currentUser.getIdToken();
 };
 
+
+// export const login = (email, password) => {
+//     return firebase.auth().signInWithEmailAndPassword(email, password)
+//         .then((signInResponse) => _doesUserExist(signInResponse.user.uid))
+//         .then((doesUserExist) => {
+//             if (!doesUserExist) {
+//                 logout();
+//                 throw new Error("This User Exists in firebase, but")
+//             }
+//         })
+//}
+
 export const logout = () => {
     firebase.auth().signOut()
 };

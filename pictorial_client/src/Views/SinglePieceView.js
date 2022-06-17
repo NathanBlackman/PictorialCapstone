@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from 'react-router-dom';
-import { getSinglePiece } from "../api/Data/PieceData";
+// import { getSinglePiece } from "../api/Data/PieceData";
 import SinglePiece from '../Components/SinglePiece';
 
 export default function SinglePieceView() {
@@ -9,7 +9,7 @@ export default function SinglePieceView() {
     const { id } = useParams();
 
     useEffect(() => {
-        getSinglePiece(id).then(setEditPiece)
+        // getSinglePiece(id).then(setEditPiece)
     }, [id]);
 
 

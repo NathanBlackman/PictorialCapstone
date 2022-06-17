@@ -1,12 +1,20 @@
 import axios from 'axios';
 
 const getPieces = () => new Promise((resolve, reject) => {
-    // 
-    axios.get(`https://localhost:7242/api/Pieces`)
+    
+    axios.get("https://localhost:7242/api/Pieces")
         .then((response) => {
             resolve(Object.values(response.data));
         })
         .catch(reject);
+
+    // axios({
+    //     method: "get",
+    //     url:
+    //     "https://localhost:7242/api/Pieces",
+    // }).then(function(response) {
+    //     resolve(Object.values(response.data));
+    // }).catch(reject);
 });
 
 const createPiece = (obj) => new Promise((resolve, reject) => {

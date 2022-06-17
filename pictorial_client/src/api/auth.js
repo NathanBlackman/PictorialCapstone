@@ -1,5 +1,11 @@
 import firebase from 'firebase/compat/app';
 
+const signInUser = () => {
+    const provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(provider);
+};
+
+
 const signOutUser = () => new Promise((resolve, reject) => {
     firebase
         .auth()
@@ -8,4 +14,12 @@ const signOutUser = () => new Promise((resolve, reject) => {
         .catch(reject);
 });
 
-export default signOutUser;
+// export default {
+//     signInUser,
+//     signOutUser,
+// };
+
+export {
+    signInUser,
+    signOutUser
+}
