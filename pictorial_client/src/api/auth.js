@@ -2,7 +2,12 @@ import firebase from 'firebase/compat/app';
 
 const signInUser = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
-    firebase.auth().signInWithPopup(provider);
+    provider.addScope("profile");
+    provider.addScope("email");
+    firebase.auth().signInWithPopup(provider).then(function (result) {
+        var token = result.credential.accessToken;
+        var user = result.user;
+    });
 };
 
 
@@ -13,11 +18,6 @@ const signOutUser = () => new Promise((resolve, reject) => {
         .then(resolve)
         .catch(reject);
 });
-
-// export default {
-//     signInUser,
-//     signOutUser,
-// };
 
 export {
     signInUser,

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { Spinner } from 'reactstrap';
 import { signInUser } from '../api/auth';
@@ -33,3 +34,9 @@ export default function Login( user = {} ) {
         </div>
     );
 }
+
+Login.propTypes = {
+    user: PropTypes.node,
+};
+
+Login.defaultProps = {user: null};
